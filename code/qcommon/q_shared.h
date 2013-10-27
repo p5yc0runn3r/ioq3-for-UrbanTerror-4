@@ -26,14 +26,14 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 // q_shared.h -- included first by ALL program modules.
 // A user mod should never modify this file
 
-#define Q3_VERSION            "ioQ3 1.35 urt 4.2.013"
+#define Q3_VERSION            "p5yc0_ioUrT v1.0/UrT 4.2.013 by p5yc0runn3r"
 #ifndef SVN_VERSION
   #define SVN_VERSION Q3_VERSION
 #endif
-#define CLIENT_WINDOW_TITLE   "Quake3-UrT"
-#define CLIENT_WINDOW_ICON    "iourbanterror"
-#define CONSOLE_WINDOW_TITLE  "Quake3-UrT console"
-#define CONSOLE_WINDOW_ICON   "iourbanterror console"
+#define CLIENT_WINDOW_TITLE   "p5yc0_ioUrT"
+#define CLIENT_WINDOW_ICON    "p5yc0_ioUrT"
+#define CONSOLE_WINDOW_TITLE  "p5yc0_ioUrT console"
+#define CONSOLE_WINDOW_ICON   "p5yc0_ioUrT console"
 // 1.32 released 7-10-2002
 
 #define BASEGAME              "q3ut4"
