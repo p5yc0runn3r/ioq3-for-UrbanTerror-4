@@ -213,7 +213,7 @@ ifeq ($(PLATFORM),linux)
   endif
   endif
 
-  BASE_CFLAGS = -Wall -Wimplicit -Wstrict-prototypes -pipe
+  BASE_CFLAGS = -Wall -fno-strict-aliasing -Wimplicit -Wstrict-prototypes -pipe
 
   ifeq ($(USE_OPENAL),1)
     BASE_CFLAGS += -DUSE_OPENAL=1
@@ -238,13 +238,11 @@ ifeq ($(PLATFORM),linux)
   else
     BASE_CFLAGS += -I/usr/X11R6/include
   endif
- #Anything more then -O2 and *mmx *msse/2/ causes hitching with urbanterror\
-#also -march is illrelavent unless you know your target cpu
-  OPTIMIZE = -O2 -mmmx -msse -msse2 -msse3
-#having x86_x64 implys having full SSE support up to SSE3 so we will use it,\
-#for old cpus we don't care because anything pre Pentium 4/Althlon 1600+ won't run UrbanTerror 
+ #Anything more then -O2 and *mmx *msse/2/ causes hitching with urbanterror also -march is illrelavent unless you know your target cpu
+  OPTIMIZE = -O2 -mmmx msse -msse2 
+#having x86_x64 implys having full SSE support up to SSE3 so we will use it for old cpus we don't care because anything pre Pentium 4/Althlon 1600+ won't run urt anyway no -mtune here because it misbehaves on nix
   ifeq ($(ARCH),x86_64) 
-    OPTIMIZE = -O2 -msse -msse2 -msse3
+    OPTIMIZE = -O2 -msse  -msse -msse2 
     # experimental x86_64 jit compiler! you need GNU as
     HAVE_VM_COMPILED = true
   else
@@ -314,7 +312,7 @@ ifeq ($(PLATFORM),darwin)
   BASE_CFLAGS=
   CLIENT_LDFLAGS=
   LDFLAGS=
-  OPTIMIZE= -O2 
+  OPTIMIZE=
   ifeq ($(BUILD_MACOSX_UB),ppc)
     CC=gcc-3.3
     BASE_CFLAGS += -arch ppc -DSMP \
@@ -362,13 +360,12 @@ ifeq ($(PLATFORM),darwin)
     BASE_CFLAGS += -Wall -Wimplicit -Wstrict-prototypes
   endif
   endif
-#sse2 should be safe to use on mac so long as the target machine supports sse2\
-#(anything capable of running urt will have sse2 support so the point is null)
+
   ifeq ($(ARCH),ppc)
     OPTIMIZE += -faltivec -O2
   endif
   ifeq ($(ARCH),i386)
-    OPTIMIZE += -O2 -msse -mfpmath=sse
+    OPTIMIZE += -march=prescott -mfpmath=sse
     # x86 vm will crash without -mstackrealign since MMX instructions will be
     # used no matter what and they corrupt the frame pointer in VM calls
     BASE_CFLAGS += -mstackrealign
@@ -416,7 +413,7 @@ ifeq ($(PLATFORM),darwin)
     #CLIENT_LDFLAGS += -L/usr/X11R6/$(LIB) -lX11 -lXext -lXxf86dga -lXxf86vm
   endif
 
-  OPTIMIZE += -O2 -msse -msse2
+  OPTIMIZE += -ffast-math -falign-loops=16
 
   ifneq ($(HAVE_VM_COMPILED),true)
     BASE_CFLAGS += -DNO_VM_COMPILED
@@ -448,8 +445,8 @@ WINDRES=windres
 endif
 
   ARCH=x86
-#warnings are slow and ioquake 3 1.35 throws a tonn of them >>disabled unless are are compiling for debug
-  BASE_CFLAGS = -W
+#warnings are slow and ioquake 3 1.35 throws a fucktonn of them >>disabled unless are are compiling for debug
+  BASE_CFLAGS = -w
 #eventully lose the static libs please they cause all manner of evil
   ifeq ($(USE_OPENAL),1)
     BASE_CFLAGS += -DUSE_OPENAL=1 -DUSE_OPENAL_DLOPEN=1
@@ -465,8 +462,7 @@ endif
   ifeq ($(USE_CODEC_VORBIS),1)
     BASE_CFLAGS += -DUSE_CODEC_VORBIS=1
   endif
- #NoooooOOo //MARCH FLAGS are evil and so is -mtune and state the other flags manually anything after Althon  1600+/pentium 4 should have SSE2+ \
- # support in a Ideal world we would do builds for Intel and AMD cpus 
+ #NoooooOOo //MARCH FLAGS are evil and so is -mtune and state the other flags manually anything after Althon  1600+/pentium 4 should have SSE3 support in a Ideal world we would do builds for Intel and AMD cpus 
   OPTIMIZE = -O2  -mmmx -msse -msse2 
   HAVE_VM_COMPILED = true
 
